@@ -8,4 +8,4 @@ Information About Hardware for Project 1
 *I'm using 220 omhs reisitors in each of the LED pins connectors and a 10k for the press button
 
 *Pin Layout
-![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project-1/PINALYOUT.png)
+![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project-1/PINALYOUT-P1.png)
