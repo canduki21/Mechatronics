@@ -11,3 +11,12 @@ Information About Hardware & Software for Project 1
 ![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project-1/PINALYOUT-P1.png)
 * MX Pin Layout
 ![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project-1/MXLAYOUT.png)
+* Clock Settings
+ ```
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 7199;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 99;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  HAL_TIM_Base_Init(&htim2);
+```
