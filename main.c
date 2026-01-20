@@ -1,28 +1,28 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * Stopwatch – STM32F103C8 - 3461BS-1 COMMON CATHODE - FINAL
-  ******************************************************************************
-  */
+//Candela Solis Zampini
+//Project 1 - MEE5316 Mechatronics
+//Jan 20 of 2026
+
+  ***********************************************************************************
+  * Stopwatch – STM32F103C8 (Blue Pill) - 3461BS-1 4-Digit 7-Segment COMMON CATHODE *
+  ***********************************************************************************
+
+ //Libraries
 #include "main.h"
 #include <stdbool.h>
 
-/* Private variables ---------------------------------------------------------*/
+//Set up variables
 TIM_HandleTypeDef htim2;
-
-/* USER CODE BEGIN PV */
 volatile uint32_t stopwatch_ticks = 0;
 volatile bool running = false;
-/* USER CODE END PV */
 
-/* Private function prototypes -----------------------------------------------*/
+
+// Clock Function + GPIO Outputs + Buttom Interrupt
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 
-/* USER CODE BEGIN 0 */
 
-// 7-segment font (abcdefg) - PA0-PA6
+// 7-segment each LED hex
 const uint8_t seg_map[10] = {
   0x3F, // 0
   0x06, // 1
@@ -38,19 +38,19 @@ const uint8_t seg_map[10] = {
 
 void set_segments(uint8_t value)
 {
-  // For COMMON CATHODE: Invert! LOW = ON, HIGH = OFF
+  // COMMON CATHODE: LOW = ON, HIGH = OFF
   for (int i = 0; i < 7; i++)
   {
     HAL_GPIO_WritePin(GPIOA, (1 << i),
       (value & (1 << i)) ? GPIO_PIN_RESET : GPIO_PIN_SET);
   }
-  // Turn off decimal point
+  // decimal point
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
 }
 
 void disable_digits(void)
 {
-  // For COMMON CATHODE: LOW to disable
+ 
   HAL_GPIO_WritePin(GPIOB,
     GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_10 | GPIO_PIN_11,
     GPIO_PIN_RESET);
@@ -59,8 +59,7 @@ void disable_digits(void)
 void enable_digit(uint8_t d)
 {
   disable_digits();
-  // For COMMON CATHODE: HIGH to enable
-  // Standard mapping: PB0=D1, PB1=D2, PB10=D3, PB11=D4
+ 
   switch(d)
   {
     case 0: HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET); break;  // D1
@@ -105,7 +104,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     running = !running;
   }
 }
-/* USER CODE END 0 */
+
 
 int main(void)
 {
@@ -122,7 +121,7 @@ int main(void)
   }
 }
 
-/* CLOCK CONFIG --------------------------------------------------------------*/
+// Clock configuration
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -146,7 +145,7 @@ void SystemClock_Config(void)
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
 }
 
-/* TIM2 INIT ----------------------------------------------------------------*/
+// TIM2 Initiation (Interrupt pin)
 static void MX_TIM2_Init(void)
 {
   htim2.Instance = TIM2;
@@ -160,7 +159,7 @@ static void MX_TIM2_Init(void)
   HAL_NVIC_EnableIRQ(TIM2_IRQn);
 }
 
-/* GPIO INIT ----------------------------------------------------------------*/
+// GPIO Initiation
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
