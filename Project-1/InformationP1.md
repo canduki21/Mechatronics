@@ -7,3 +7,5 @@ Information About Hardware for Project 1
 
 *I'm using 220 omhs reisitors in each of the LED pins connectors and a 10k for the press button
 
+*Pin Layout
+![alt text](https://github.com/canduki/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
