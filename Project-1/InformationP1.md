@@ -1,4 +1,4 @@
-Information About Hardware for Project 1
+Information About Hardware & Software for Project 1
 ======
 
 * I'm using a Blue Pill (STM32103C8T6) and a ST-LINK V2.
