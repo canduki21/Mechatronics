@@ -9,3 +9,5 @@ Information About Hardware for Project 1
 
 * Pin Layout
 ![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project-1/PINALYOUT-P1.png)
+* MX Pin Layout
+![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project-1/MXLAYOUT.png)
