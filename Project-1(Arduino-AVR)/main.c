@@ -157,3 +157,4 @@ int main(void)
     last_button_state = button_state;
   }
 }
+avrdude -c arduino -p m328p -P COM3 -b 115200 -U flash:w:stopwatch_avr.hex:i
