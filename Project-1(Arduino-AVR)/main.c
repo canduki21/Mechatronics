@@ -158,3 +158,4 @@ int main(void)
   }
 }
 avrdude -c arduino -p m328p -P COM3 -b 115200 -U flash:w:stopwatch_avr.hex:i
+avrdude.exe -c arduino -p m328p -P COM3 -b 115200 -U flash:w:"C:\Users\candela\Documents\Atmel Studio\7.0\GccApplication1\Debug\GccApplication1.hex"
