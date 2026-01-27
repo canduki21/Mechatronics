@@ -169,4 +169,5 @@ Avrdude done.  Thank you.
 
 C:\Users\candela\AppData\Local\Arduino15\packages\arduino\tools\avrdude\8.0.0-arduino1\bin>
 
+avrdude.exe -c arduino -p m328p -P COM3 -b 115200 -U flash:w:"C:\Users\candela\Documents\Atmel Studio\7.0\stopwatch\stopwatch\Debug\stopwatch.hex"
 
