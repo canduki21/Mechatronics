@@ -157,17 +157,4 @@ int main(void)
     last_button_state = button_state;
   }
 }
-avrdude -c arduino -p m328p -P COM3 -b 115200 -U flash:w:stopwatch_avr.hex:i
-avrdude.exe -c arduino -p m328p -P COM3 -b 115200 -U flash:w:"C:\Users\candela\Documents\Atmel Studio\7.0\GccApplication1\Debug\GccApplication1.hex"
-  C:\Users\candela\AppData\Local\Arduino15\packages\arduino\tools\avrdude\8.0.0-arduino1\bin>avrdude.exe -c arduino -p m328p -P COM3 -b 115200 -U flash:w:"C:\Users\candela\Documents\Atmel Studio\7.0\stopwatch\stopwatch\Debug"
-OS error: file Debug is not readable: (not a regular or character file?)
-OS error: unable to open C:\Users\candela\Documents\Atmel Studio\7.0\stopwatch\stopwatch\Debug: Permission denied
-Error: cannot determine file format for C:\Users\candela\Documents\Atmel Studio\7.0\stopwatch\stopwatch\Debug, specify explicitly
-Error: reading from file Debug failed
-
-Avrdude done.  Thank you.
-
-C:\Users\candela\AppData\Local\Arduino15\packages\arduino\tools\avrdude\8.0.0-arduino1\bin>
-
-avrdude.exe -c arduino -p m328p -P COM3 -b 115200 -U flash:w:"C:\Users\candela\Documents\Atmel Studio\7.0\stopwatch\stopwatch\Debug\stopwatch.hex"
-
+C:\Users\candela\AppData\Local\Arduino15\packages\arduino\tools\avrdude\8.0.0-arduino1\bin>avrdude.exe -c arduino -p m328p -P COM3 -b 115200 -U flash:w:"C:\Users\candela\Documents\Atmel Studio\7.0\stopwatch\stopwatch\Debug\stopwatch.hex"
