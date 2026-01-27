@@ -26,28 +26,34 @@ const uint8_t seg_map[10] = {
 void set_segments(uint8_t value, bool show_decimal)
 {
   // For COMMON CATHODE: Invert! LOW = ON, HIGH = OFF
-  uint8_t output = 0;
-  for (int i = 0; i < 7; i++)
+  
+  // Segments A-F on A0-A5 (PC0-PC5)
+  for (int i = 0; i < 6; i++)
   {
     if (value & (1 << i))
-      output &= ~(1 << i);  // Clear bit (LOW = ON)
+      PORTC &= ~(1 << i);  // Clear bit (LOW = ON)
     else
-      output |= (1 << i);   // Set bit (HIGH = OFF)
+      PORTC |= (1 << i);   // Set bit (HIGH = OFF)
   }
   
-  // Decimal point (bit 7)
-  if (show_decimal)
-    output &= ~(1 << 7);  // LOW = ON
+  // Segment G on D6 (PD6)
+  if (value & (1 << 6))
+    PORTD &= ~(1 << PD6);  // LOW = ON
   else
-    output |= (1 << 7);   // HIGH = OFF
+    PORTD |= (1 << PD6);   // HIGH = OFF
   
-  PORTC = output;
+  // Decimal point on D7 (PD7)
+  if (show_decimal)
+    PORTD &= ~(1 << PD7);  // LOW = ON
+  else
+    PORTD |= (1 << PD7);   // HIGH = OFF
 }
 
 void disable_digits(void)
 {
   // For COMMON CATHODE: LOW to disable
-  PORTD &= ~((1 << PD0) | (1 << PD1) | (1 << PD2) | (1 << PD3));
+  PORTD &= ~((1 << PD0) | (1 << PD1));  // D0, D1 LOW
+  PORTB &= ~((1 << PB2) | (1 << PB3));  // D10, D11 LOW
 }
 
 void enable_digit(uint8_t d)
@@ -56,10 +62,10 @@ void enable_digit(uint8_t d)
   // For COMMON CATHODE: HIGH to enable
   switch(d)
   {
-    case 0: PORTD |= (1 << PD0); break;  // D1
-    case 1: PORTD |= (1 << PD1); break;  // D2
-    case 2: PORTD |= (1 << PD2); break;  // D3
-    case 3: PORTD |= (1 << PD3); break;  // D4
+    case 0: PORTD |= (1 << PD0); break;  // D0 (digit 1)
+    case 1: PORTD |= (1 << PD1); break;  // D1 (digit 2)
+    case 2: PORTB |= (1 << PB2); break;  // D10 (digit 3)
+    case 3: PORTB |= (1 << PB3); break;  // D11 (digit 4)
   }
 }
 
@@ -92,74 +98,58 @@ ISR(TIMER1_COMPA_vect)
   }
 }
 
-// External interrupt for button (INT0 on PD4)
-ISR(INT0_vect)
-{
-  _delay_ms(50);  // Simple debounce
-  if (PIND & (1 << PD4))  // Check if still pressed
-  {
-    running = !running;
-  }
-}
-
 void init_timer(void)
 {
   // Timer1 in CTC mode for 10ms interrupt
   // Prescaler = 64, OCR1A = 2499
   // (16MHz / 64) / 2500 = 100 Hz (10ms)
   
-  TCCR1B |= (1 << WGM12);           // CTC mode
-  TCCR1B |= (1 << CS11) | (1 << CS10);  // Prescaler = 64
-  OCR1A = 2499;                     // Compare value
-  TIMSK1 |= (1 << OCIE1A);          // Enable compare interrupt
-}
-
-void init_button(void)
-{
-  // PD4 as input with pull-up
-  DDRD &= ~(1 << PD4);
-  PORTD |= (1 << PD4);
-  
-  // Enable INT0 (PD2 on most Arduinos, but we'll use Pin Change Interrupt instead)
-  // Actually, let's use polling in main loop for simplicity
+  TCCR1B |= (1 << WGM12);                    // CTC mode
+  TCCR1B |= (1 << CS11) | (1 << CS10);       // Prescaler = 64
+  OCR1A = 2499;                              // Compare value
+  TIMSK1 |= (1 << OCIE1A);                   // Enable compare interrupt
 }
 
 void init_gpio(void)
 {
-  // PORTC (PC0-PC7) as outputs for segments
-  DDRC = 0xFF;
-  PORTC = 0xFF;  // All HIGH (segments OFF for common cathode inverted)
+  // PORTC (A0-A5) as outputs for segments A-F
+  DDRC |= 0x3F;  // Set PC0-PC5 as outputs
+  PORTC |= 0x3F; // All HIGH (segments OFF for common cathode inverted)
   
-  // PORTD (PD0-PD3) as outputs for digits
-  DDRD |= (1 << PD0) | (1 << PD1) | (1 << PD2) | (1 << PD3);
-  PORTD &= ~((1 << PD0) | (1 << PD1) | (1 << PD2) | (1 << PD3));  // All LOW (digits OFF)
+  // PORTD setup
+  DDRD |= (1 << PD0) | (1 << PD1);           // D0, D1 as outputs (digits 1, 2)
+  DDRD |= (1 << PD6) | (1 << PD7);           // D6, D7 as outputs (segment G, decimal)
+  PORTD &= ~((1 << PD0) | (1 << PD1));       // Digits LOW (OFF)
+  PORTD |= (1 << PD6) | (1 << PD7);          // Segment G and decimal HIGH (OFF)
   
-  // PD4 as input for button
-  DDRD &= ~(1 << PD4);
-  PORTD |= (1 << PD4);  // Enable pull-up
+  // PORTB setup
+  DDRB |= (1 << PB2) | (1 << PB3);           // D10, D11 as outputs (digits 3, 4)
+  PORTB &= ~((1 << PB2) | (1 << PB3));       // Digits LOW (OFF)
+  
+  DDRB &= ~(1 << PB4);                       // D12 as input (button)
+  PORTB |= (1 << PB4);                       // Enable pull-up on button
 }
 
 int main(void)
 {
   init_gpio();
   init_timer();
-  init_button();
   
   sei();  // Enable global interrupts
   
   // Button handling variables
-  static bool last_button_state = true;  // Pull-up = HIGH when not pressed
+  bool last_button_state = true;  // Pull-up = HIGH when not pressed
   
   while (1)
   {
     display_time(stopwatch_ticks);
     
     // Simple button polling with debounce
-    bool button_state = (PIND & (1 << PD4)) == 0;  // LOW when pressed
+    bool button_state = (PINB & (1 << PB4)) == 0;  // LOW when pressed
     if (button_state && !last_button_state)
     {
       _delay_ms(50);  // Debounce
-      if ((PIND & (1 << PD4)) == 0)  // Still pressed
+      if ((PINB & (1 << PB4)) == 0)  // Still pressed
       {
         running = !running;
       }
