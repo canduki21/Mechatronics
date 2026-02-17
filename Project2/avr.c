@@ -4,7 +4,7 @@
 #include <util/delay.h>
 #include <stdlib.h>
 
-// ---------------- USART ----------------
+// ================= USART =================
 void USART_init(unsigned int ubrr)
 {
     UBRR0H = (unsigned char)(ubrr >> 8);
@@ -31,7 +31,9 @@ void USART_print(const char *str)
         USART_transmit(*str++);
 }
 
-// ---------------- STEPPER ----------------
+// ================= STEPPER =================
+// Pins 22–25 → PA0–PA3
+
 const uint8_t stepSequence[8] = {
     0b0001,
     0b0011,
@@ -91,29 +93,37 @@ void returnStepperToZero()
     currentPosition = 0;
 }
 
-// ---------------- SERVO ----------------
+// ================= SERVO =================
+// Pin 3 → PE5 → OC3C → Timer3
+
 void servo_init()
 {
-    DDRB |= (1 << PB5); // OC1A
+    DDRE |= (1 << PE5);  // Pin 3 as output
 
-    TCCR1A = (1 << COM1A1) | (1 << WGM11);
-    TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS11);
+    // Fast PWM, ICR3 as TOP
+    TCCR3A = (1 << COM3C1) | (1 << WGM31);
+    TCCR3B = (1 << WGM33) | (1 << WGM32) | (1 << CS31); // prescaler 8
 
-    ICR1 = 39999; // 50Hz
+    ICR3 = 39999;  // 20ms period (50Hz)
 }
 
 void servo_set_angle(uint8_t angle)
 {
+    // 1ms–2ms pulse width
     uint16_t pulse = 2000 + ((uint32_t)angle * 2000) / 180;
-    OCR1A = pulse;
+    OCR3C = pulse;
 }
 
-// ---------------- MAIN ----------------
+// ================= MAIN =================
 int main(void)
 {
-    DDRA |= 0x0F;   // Stepper pins
+    // Stepper outputs
+    DDRA |= 0x0F;  // PA0–PA3
+
     servo_init();
-    USART_init(103); // 9600 baud
+    servo_set_angle(0);
+
+    USART_init(103); // 9600 baud @ 16MHz
 
     while (1)
     {
@@ -133,7 +143,7 @@ int main(void)
 
         uint8_t clockwise = (directionChoice == '1');
 
-        USART_print("\r\nEnter Angle (two digits): ");
+        USART_print("\r\nEnter Angle (two digits, e.g. 90): ");
 
         char d1 = USART_receive();
         USART_transmit(d1);
@@ -149,7 +159,7 @@ int main(void)
 
         USART_print("\r\nMoving...\r\n");
 
-        if (motorChoice == '1')  // SERVO
+        if (motorChoice == '1') // SERVO
         {
             if (!clockwise)
                 angle = 180 - angle;
@@ -158,7 +168,7 @@ int main(void)
             _delay_ms(3000);
             servo_set_angle(0);
         }
-        else  // STEPPER
+        else // STEPPER
         {
             moveStepperAngle(angle, clockwise);
             _delay_ms(3000);
