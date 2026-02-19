@@ -25,53 +25,9 @@ I enjoy building systems that integrate hardware, software, and control logic in
 
 ---
 
-## 🔧 Projects Included in This Repository
-
-### 1️⃣ Touchscreen Motor Control System
-- Arduino-based control interface
-- TFT touchscreen UI (ILI9341)
-- Resistive touch controller (TSC2007)
-- Stepper motor control (4-phase drive sequence)
-- Servo motor directional logic
-- User-defined position entry via touchscreen keypad
-
-Concepts applied:
-- Embedded C++
-- State machine design
-- Motor actuation control
-- Human-machine interface (HMI)
-- Sequential logic and timing
-
----
-
-### 2️⃣ Stepper Motor Driver Implementation
-- Custom stepping sequence
-- Direction control (CW / CCW)
-- Position tracking
-- Return-to-origin logic
-
-Concepts applied:
-- Open-loop motion control
-- Digital output phase sequencing
-- Position state management
-
----
-
-### 3️⃣ Servo Motion Logic with Direction Simulation
-- Direction simulation for limited-angle servo
-- Angle transformation logic
-- Controlled motion sequencing
-
-Concepts applied:
-- Actuator constraints handling
-- Motion sequencing
-- Logical direction mapping
-
----
-
 ## 🧠 Skills Demonstrated
 
-- Embedded programming (Arduino / C++)
+- Embedded programming (Arduino / C/ C++/ MicrochipStudio)
 - Motor control systems
 - UI development for embedded displays
 - Hardware integration
@@ -81,15 +37,16 @@ Concepts applied:
 
 ---
 
-## 🛠 Technologies Used
+## 🛠 Hardarew Used
 
 - Arduino
-- C++
+- STME32 (BluePill)
+- C++ / C
 - ILI9341 TFT Display
 - TSC2007 Touch Controller
 - Servo Motors
 - Stepper Motors
-- ULN2003 Driver (if applicable)
+- ULN2003 Driver 
 
 ---
 
@@ -107,18 +64,6 @@ Each project emphasizes system-level thinking and practical implementation.
 
 ---
 
-## 🚀 Future Improvements
-
-Planned improvements include:
-
-- Closed-loop control implementation
-- Acceleration ramping for stepper motors
-- Smooth servo motion interpolation
-- Modular firmware structure
-- Improved UI responsiveness
-- Hardware abstraction layers
-
----
 
 ## 📌 Author
 
