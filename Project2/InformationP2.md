@@ -12,4 +12,4 @@ Information About Hardware & Software for Project 2
 #include <Adafruit_TSC2007.h>
 #include <Servo.h>
 
-*The Stepper motor it's a 28byj-48 with a motor driver ULN2003 driver board
+* The Stepper motor it's a 28byj-48 with a motor driver ULN2003 driver board
