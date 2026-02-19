@@ -13,4 +13,4 @@ Information About Hardware & Software for Project 2
 #include <Servo.h>
 
 * The Stepper motor it's a 28byj-48 with a motor driver ULN2003 driver board
-![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project2/FinalLook.png)
+![alt text](https://github.com/canduki21/Mechatronics/blob/main/Project2/IMG_4383.JPG)
